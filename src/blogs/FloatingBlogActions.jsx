@@ -8,41 +8,22 @@ import useAllBlogs from "../hooks/useAllBlogs";
 import useAuth from "../hooks/useAuth";
 import useFavBlogs from "../hooks/useFavBlogs";
 
-export default function FloatingBlogActions({ blog }) {
+export default function FloatingBlogActions({ blog, handleFav, handleLike }) {
   const { auth } = useAuth();
   const { api } = useAxios();
-  const [favourite, setFavourite] = useState(false);
-  const { favBlogs, setFavBlogs } = useFavBlogs();
-  const [like, setLike] = useState(
-    blog?.likes?.map((like) => auth?.user?.id === like.id)
+
+  const { favBlogs } = useFavBlogs();
+  const [favourite, setFavourite] = useState(
+    auth?.user?.favourites?.find((fav) => fav.id === blog.id)
   );
-  const { blogs, setBlogs } = useAllBlogs();
-  const handleLike = async (id) => {
-    try {
-      const response = await api.post(`http://localhost:3000/blogs/${id}/like`);
-
-      console.log(response, "like action");
-    } catch (err) {}
-  };
-  const handleFav = async (id) => {
-    try {
-      const response = await api.patch(
-        `http://localhost:3000/blogs/${id}/favourite`
-      );
-
-      if (response.status == 200) {
-        setFavourite(true);
-        setFavBlogs((favBlogs) => [...favBlogs, response.data]);
-      }
-    } catch (err) {
-      setFavourite(false);
-    }
-  };
+  const [like, setLike] = useState(
+    blog?.likes?.find((like) => like.id === auth?.user?.id)
+  );
 
   return (
     <div className="floating-action">
       <ul className="floating-action-menus">
-        <li onClick={handleLike}>
+        <li onClick={() => handleLike(blog?.id)}>
           <img src={likes} alt="like" />
           <span>{blog?.likes?.length}</span>
         </li>

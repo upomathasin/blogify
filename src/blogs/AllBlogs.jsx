@@ -52,10 +52,10 @@ export default function AllBlogs({ showAuthor, showDetails }) {
     <div className="space-y-3 md:col-span-5">
       {console.log(blogs)}
       {blogs &&
-        blogs.map((blog) => {
+        blogs.map((blog, index) => {
           return (
             <BlogCard
-              key={blog.id}
+              key={blog}
               blog={blog}
               showAuthor={(e) => showAuthor(e, blog?.author?.id)}
               showDetails={() => showDetails(blog.id)}
