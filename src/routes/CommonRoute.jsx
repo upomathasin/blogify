@@ -15,16 +15,13 @@ export default function CommonRoute() {
         {" "}
         <BlogContextProvider>
           {" "}
-          <FavBlogsContextProvider>
-            {" "}
-            <PopularBlogsProvider>
-              <ProfileContextProvider>
-                <Header></Header>
+          <PopularBlogsProvider>
+            <ProfileContextProvider>
+              <Header></Header>
 
-                <Outlet></Outlet>
-              </ProfileContextProvider>
-            </PopularBlogsProvider>
-          </FavBlogsContextProvider>
+              <Outlet></Outlet>
+            </ProfileContextProvider>
+          </PopularBlogsProvider>
         </BlogContextProvider>
       </AuthProvider>
       <Footer></Footer>

@@ -38,7 +38,6 @@ export function useAxios() {
             setAuth({
               ...auth,
               accessToken: accessToken,
-              refreshToken: refreshToken,
             });
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             console.log(accessToken, "new token");

@@ -1,23 +1,27 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FavBlogsContext } from "../context";
 import { useAxios } from "./useAxios";
 
 export default function useFavBlogs() {
-  const { favBlogs, setFavBlogs } = useContext(FavBlogsContext);
+  const [favBlogs, setFavBlogs] = useState([]);
   const { api } = useAxios();
 
   useEffect(() => {
-    const fetchFavBlogs = async () => {
-      const response = await api.post(
-        `${import.meta.env.VITE_BASE_URL}/blogs/favourites`
-      );
+    try {
+      const fetchFavBlogs = async () => {
+        const response = await api.get(
+          `${import.meta.env.VITE_BASE_URL}/blogs/favourites`
+        );
 
-      if (response && response.status == 200) {
-        setFavBlogs(response.data);
-      }
-    };
+        if (response && response.status == 200) {
+          setFavBlogs(response.data.blogs);
+        }
+      };
 
-    fetchFavBlogs();
+      fetchFavBlogs();
+    } catch (err) {
+      console.log(err.message);
+    }
   }, []);
   return { favBlogs, setFavBlogs };
 }
