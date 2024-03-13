@@ -37,7 +37,7 @@ export default function BlogDetails() {
     if (auth?.user) {
       try {
         const response = await api.post(
-          `http://localhost:3000/blogs/${id}/like`
+          `${import.meta.env.VITE_BASE_URL}/blogs/${id}/like`
         );
         // setLike(response?.data?.isLiked);
         console.log(response, "like action");
@@ -56,7 +56,7 @@ export default function BlogDetails() {
     if (auth?.user) {
       try {
         const response = await api.patch(
-          `http://localhost:3000/blogs/${id}/favourite`
+          `${import.meta.env.VITE_BASE_URL}/blogs/${id}/favourite`
         );
 
         if (response.status == 200) {
@@ -73,7 +73,26 @@ export default function BlogDetails() {
     }
   };
 
-  console.log("fav in blog details : ", favourite);
+  const handleComment = async (id, comment) => {
+    if (auth?.user) {
+      try {
+        const response = await api.post(
+          `${import.meta.env.VITE_BASE_URL}/blogs/${id}/comment`,
+          comment
+        );
+
+        if (response.status == 200) {
+          alert("Your comment has been added !");
+          fetchBlogsDetails();
+        }
+      } catch (err) {
+        alert("Error occurred ", err.message);
+      }
+    } else {
+      alert("Please Login First !");
+      navigate("/login");
+    }
+  };
   return (
     <div>
       <main>
@@ -81,7 +100,7 @@ export default function BlogDetails() {
           <BlogContent blog={blog}></BlogContent>
         </section>
 
-        <BlogComments blog={blog}></BlogComments>
+        <BlogComments blog={blog} handleComment={handleComment}></BlogComments>
       </main>
 
       <FloatingBlogActions

@@ -15,15 +15,6 @@ export default function FloatingBlogActions({
   favourite,
 }) {
   const { auth } = useAuth();
-  const { api } = useAxios();
-
-  const { favBlogs } = useFavBlogs();
-
-  const [like, setLike] = useState(
-    blog?.likes?.find((like) => like.id === auth?.user?.id)
-  );
-
-  console.log(favourite);
 
   return (
     <div className="floating-action">

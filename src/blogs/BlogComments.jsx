@@ -1,8 +1,20 @@
 import React from "react";
 import useAuth from "../hooks/useAuth";
 
-export default function BlogComments({ blog }) {
+export default function BlogComments({ blog, handleComment }) {
   const { auth } = useAuth();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (e.target.comment.value) {
+      const comment = { content: e.target.comment.value };
+      handleComment(blog?.id, comment);
+    } else {
+      alert("Please write something before submitting comment !");
+    }
+  };
+
   return (
     <section id="comments">
       <div className="mx-auto w-full md:w-10/12 container">
@@ -24,15 +36,19 @@ export default function BlogComments({ blog }) {
               )}
             </div>
             <div className="w-full">
-              <textarea
-                className="w-full bg-[#030317] border border-slate-500 text-slate-300 p-4 rounded-md focus:outline-none"
-                placeholder="Write a comment"
-              ></textarea>
-              <div className="flex justify-end mt-4">
-                <button className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200">
-                  Comment
-                </button>
-              </div>
+              <form onSubmit={handleSubmit}>
+                <textarea
+                  name="comment"
+                  className="w-full bg-[#030317] border border-slate-500 text-slate-300 p-4 rounded-md focus:outline-none"
+                  placeholder="Write a comment"
+                ></textarea>
+
+                <div className="flex justify-end mt-4">
+                  <button className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200">
+                    Comment
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}
