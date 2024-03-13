@@ -7,11 +7,17 @@ import FloatingBlogActions from "../blogs/FloatingBlogActions";
 import BlogComments from "../blogs/BlogComments";
 import BlogContent from "../blogs/BlogContent";
 import { useAxios } from "../hooks/useAxios";
+import useFavBlogs from "../hooks/useFavBlogs";
 
 export default function BlogDetails() {
   const { api } = useAxios();
   const [blog, setBlog] = useState({});
   const { id } = useParams();
+  const { fetchFavBlogs, favBlogs } = useFavBlogs();
+  const [favourite, setFavourite] = useState(
+    favBlogs.find((fav) => (fav.id === id ? true : false))
+  );
+
   const fetchBlogsDetails = async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_BASE_URL}/blogs/${id}`
@@ -23,7 +29,7 @@ export default function BlogDetails() {
   };
   useEffect(() => {
     fetchBlogsDetails();
-  }, [id]);
+  }, [favourite]);
 
   const handleLike = async (id) => {
     try {
@@ -44,13 +50,16 @@ export default function BlogDetails() {
       );
 
       if (response.status == 200) {
-        console.log("fav response : ", response.data);
+        console.log("fav");
+        setFavourite(!favourite);
+        fetchFavBlogs();
       }
     } catch (err) {
       setFavourite(false);
     }
   };
 
+  console.log("fav in blog details : ", favourite);
   return (
     <div>
       <main>
@@ -65,6 +74,7 @@ export default function BlogDetails() {
         blog={blog}
         handleFav={handleFav}
         handleLike={handleLike}
+        favourite={favourite}
       ></FloatingBlogActions>
     </div>
   );

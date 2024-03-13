@@ -8,17 +8,22 @@ import useAllBlogs from "../hooks/useAllBlogs";
 import useAuth from "../hooks/useAuth";
 import useFavBlogs from "../hooks/useFavBlogs";
 
-export default function FloatingBlogActions({ blog, handleFav, handleLike }) {
+export default function FloatingBlogActions({
+  blog,
+  handleFav,
+  handleLike,
+  favourite,
+}) {
   const { auth } = useAuth();
   const { api } = useAxios();
 
   const { favBlogs } = useFavBlogs();
-  const [favourite, setFavourite] = useState(
-    auth?.user?.favourites?.find((fav) => fav.id === blog.id)
-  );
+
   const [like, setLike] = useState(
     blog?.likes?.find((like) => like.id === auth?.user?.id)
   );
+
+  console.log(favourite);
 
   return (
     <div className="floating-action">
@@ -31,7 +36,7 @@ export default function FloatingBlogActions({ blog, handleFav, handleLike }) {
         <li>
           {" "}
           <button onClick={() => handleFav(blog?.id)}>
-            <img src={`${favourite ? fillFav : fav}`} alt="Favourite" />
+            <img src={`${favourite ? fillFav : fav}`} />
           </button>
         </li>
         <a href="#comments">
