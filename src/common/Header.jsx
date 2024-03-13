@@ -12,20 +12,18 @@ export default function Header() {
     <header>
       <nav className="container">
         <div>
-          <a href="./index.html">
-            <img className="w-32" src={lws} alt="lws" />
-          </a>
+          <img className="w-32" src={lws} alt="lws" />
         </div>
 
         <div>
           <ul className="flex items-center space-x-5">
             <li>
-              <a
-                href="./createBlog.html"
+              <Link
+                to="/createBlog"
                 className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
               >
                 Write
-              </a>
+              </Link>
             </li>
             <li>
               <a
@@ -66,14 +64,12 @@ export default function Header() {
                   )}
                 </div>
 
-                <a href="./profile.html">
-                  <span class="text-white ml-2">
-                    {" "}
-                    <Link to={`/profile/${auth?.user?.id}`}>
-                      {auth?.user?.firstName} {auth?.user?.lastName}
-                    </Link>
-                  </span>
-                </a>
+                <span class="text-white ml-2">
+                  {" "}
+                  <Link to={`/profile/${auth?.user?.id}`}>
+                    {auth?.user?.firstName} {auth?.user?.lastName}
+                  </Link>
+                </span>
               </li>
             )}
           </ul>

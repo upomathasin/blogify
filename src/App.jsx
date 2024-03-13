@@ -7,6 +7,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import ProfilePage from "./pages/ProfilePage";
 import CommonRoute from "./routes/CommonRoute";
 import BlogDetails from "./pages/BlogDetails";
+import CreateBlog from "./pages/CreateBlog";
 
 function App() {
   return (
@@ -28,6 +29,12 @@ function App() {
             element={<RegisterPage></RegisterPage>}
           ></Route>
           <Route path="/login" element={<LoginPage></LoginPage>}></Route>;
+          <Route element={<PrivateRoute></PrivateRoute>}>
+            <Route
+              path="/createBlog"
+              element={<CreateBlog></CreateBlog>}
+            ></Route>
+          </Route>
         </Route>
       </Routes>
     </AuthProvider>

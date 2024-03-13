@@ -1,8 +1,31 @@
 import React from "react";
 import useAuth from "../hooks/useAuth";
 import BlogActions from "./BlogActions";
-export default function BlogCard({ blog, showDetails, showAuthor }) {
+import { useAxios } from "../hooks/useAxios";
+export default function BlogCard({
+  blog,
+  showDetails,
+  showAuthor,
+  fetchProfileData,
+}) {
   const { auth } = useAuth();
+
+  const { api } = useAxios();
+  const handleDeleteBlog = async (id) => {
+    try {
+      const response = await api.delete(
+        `${import.meta.env.VITE_BASE_URL}/blogs/${id}`
+      );
+
+      if (response.status == 200) {
+        alert("Successfully deleted your blog !");
+        fetchProfileData();
+      }
+    } catch (err) {
+      alert(err.message);
+    } finally {
+    }
+  };
 
   return (
     <div onClick={showDetails} className="blog-card">
@@ -59,7 +82,10 @@ export default function BlogCard({ blog, showDetails, showAuthor }) {
           </div>
         </div>
         {auth.user && auth.user.id === blog.author.id && (
-          <BlogActions blog={blog}></BlogActions>
+          <BlogActions
+            blog={blog}
+            handleDeleteBlog={handleDeleteBlog}
+          ></BlogActions>
         )}
       </div>
     </div>
