@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { DetailContext } from "../context";
 
 export default function BlogContent({ blog }) {
+  const { showAuthor } = useContext(DetailContext);
   return (
     <div className="container text-center py-8">
       <h1 className="font-bold text-3xl md:text-5xl">{blog.title}</h1>
@@ -20,7 +22,10 @@ export default function BlogContent({ blog }) {
               </span>
             )}
           </div>
-          <h5 className="text-slate-500 text-sm">
+          <h5
+            className="text-slate-500 text-sm"
+            onClick={(e) => showAuthor(e, blog?.author?.id)}
+          >
             {blog?.author?.firstName} {blog?.author?.lastName}
           </h5>
         </div>

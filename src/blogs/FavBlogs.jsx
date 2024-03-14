@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import useFavBlogs from "../hooks/useFavBlogs";
+import { DetailContext } from "../context";
 
-export default function FavBlogs({ showDetails }) {
+export default function FavBlogs() {
   const { favBlogs } = useFavBlogs();
-  console.log("fav", favBlogs);
+  const { showDetails, showAuthor } = useContext(DetailContext);
   return (
     <div className="sidebar-card">
       <h3 className="text-slate-300 text-xl lg:text-2xl font-semibold">

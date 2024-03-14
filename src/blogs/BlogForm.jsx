@@ -1,21 +1,32 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAxios } from "../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
-export default function BlogForm() {
+export default function BlogForm({ blog }) {
   const fileRef = useRef(null);
+  const [defaultBlog, setDefaultBlog] = useState(blog || {});
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
   const [thumbnail, setThumbnail] = useState(null);
   const { api } = useAxios();
+  const { auth } = useAuth();
 
   const handlePhotoUpload = (e) => {
-    if (e.target.files[0]) {
+    console.log(e.target.files[0]);
+    if (
+      !e.target.files[0].type.startsWith("image/") ||
+      e.target.value.size > 5 * 1024 * 1024
+    ) {
+      alert("Only images are allowed.And file size must be less than 5MB");
+      return;
+    } else {
       setThumbnail(e.target.files[0]);
     }
   };
@@ -26,22 +37,41 @@ export default function BlogForm() {
     formData.append("title", data.title);
     formData.append("content", data.content);
     formData.append("tags", tags);
-
     if (thumbnail) {
       formData.append("thumbnail", thumbnail);
     }
-    console.log(formData);
 
-    try {
-      const response = await api.post(
-        `${import.meta.env.VITE_BASE_URL}/blogs/`,
-        formData
-      );
-      if (response.status == 200) {
-        alert("Successfully created blog");
+    if (blog?.id) {
+      try {
+        const response = await api.patch(
+          `${import.meta.env.VITE_BASE_URL}/blogs/${blog.id}`,
+          formData
+        );
+
+        if (response.data.id === blog.id) {
+          alert(`Blog has been updated successfully !`);
+          console.log(response.data);
+          navigate(`/blogDetails/${response.data.id}`);
+        }
+      } catch (err) {
+        alert(err.message);
       }
-    } catch (err) {
-      alert(err.message);
+    } else {
+      try {
+        const response = await api.post(
+          `${import.meta.env.VITE_BASE_URL}/blogs/`,
+          formData
+        );
+        console.log(response.data);
+        if (response.data.status === "success") {
+          console.log(response.data.status);
+          alert(`${response.data.message}`);
+
+          navigate(`/blogDetails/${response.data.blog.id}`);
+        }
+      } catch (err) {
+        alert(err.message);
+      }
     }
   };
 
@@ -79,14 +109,30 @@ export default function BlogForm() {
           />
         </div>
       </div>
+      <div className="my-4 w-full">
+        {defaultBlog?.thumbnail && (
+          <img
+            className=" w-44"
+            src={`http://localhost:3000/uploads/blog/${defaultBlog.thumbnail}`}
+          />
+        )}
+      </div>
+      {thumbnail && (
+        <p>
+          Selected Thumbnail :{" "}
+          <span className="text-indigo-500"> {thumbnail.name}</span>{" "}
+        </p>
+      )}
       <div className="mb-6">
         <input
           type="text"
           id="title"
           name="title"
+          defaultValue={`${defaultBlog.title ? defaultBlog.title : ""}`}
           placeholder="Enter your blog title"
-          {...register("title")}
+          {...register("title", { required: true })}
         />
+        {errors?.title && <p className="text-red-500">Title is required </p>}
       </div>
 
       <div className="mb-6">
@@ -94,9 +140,13 @@ export default function BlogForm() {
           type="text"
           id="tags"
           name="tags"
+          defaultValue={`${
+            defaultBlog.tags ? defaultBlog.tags.split(",") : ""
+          }`}
           placeholder="Your Comma Separated Tags Ex. JavaScript, React, Node, Express,"
-          {...register("tags")}
+          {...register("tags", { required: true })}
         />
+        {errors?.tags && <p className="text-red-500">Tags are required </p>}
       </div>
 
       <div className="mb-6">
@@ -104,16 +154,20 @@ export default function BlogForm() {
           id="content"
           name="content"
           placeholder="Write your blog content"
-          {...register("content")}
+          {...register("content", { required: true })}
+          defaultValue={defaultBlog.content ? defaultBlog.content : ""}
           rows="8"
         ></textarea>
+        {errors?.content && (
+          <p className="text-red-500">Content is required </p>
+        )}
       </div>
 
       <button
         type="submit"
         className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
       >
-        Create Blog
+        {`${blog?.id ? "Edit Blog " : "Create Blog"}`}
       </button>
     </form>
   );

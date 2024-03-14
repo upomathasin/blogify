@@ -1,15 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import useAuth from "../hooks/useAuth";
-
-export default function BlogComments({ blog, handleComment }) {
+import deleteIcon from "../assets/icons/delete.svg";
+export default function BlogComments({
+  blog,
+  handleComment,
+  handleCommentDelete,
+}) {
   const { auth } = useAuth();
 
+  const [commentText, setCommentText] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (e.target.comment.value) {
+    if (e.target.comment.value.trim() !== "") {
       const comment = { content: e.target.comment.value };
       handleComment(blog?.id, comment);
+      setCommentText("");
     } else {
       alert("Please write something before submitting comment !");
     }
@@ -41,6 +47,8 @@ export default function BlogComments({ blog, handleComment }) {
                   name="comment"
                   className="w-full bg-[#030317] border border-slate-500 text-slate-300 p-4 rounded-md focus:outline-none"
                   placeholder="Write a comment"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
                 ></textarea>
 
                 <div className="flex justify-end mt-4">
@@ -68,9 +76,20 @@ export default function BlogComments({ blog, handleComment }) {
             )}
 
             <div className="w-full">
-              <h5 className="text-slate -500 font-bold">Saad Hasan</h5>
+              <h5 className="text-slate -500 font-bold">
+                {comment?.author?.firstName} {comment?.author?.lastName}
+              </h5>
               <p className="text-slate-300">{comment.content}</p>
             </div>
+            {comment?.author?.id === auth?.user?.id && (
+              <div
+                className="flex justify-center items-center "
+                onClick={() => handleCommentDelete(blog?.id, comment?.id)}
+              >
+                {" "}
+                <img src={deleteIcon} alt="Delete Blog" />
+              </div>
+            )}
           </div>
         ))}
       </div>

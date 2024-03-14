@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import lws from "../assets/logo.svg";
 import searchIcon from "../assets/icons/search.svg";
 import useAuth from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import useProfile from "../hooks/useProfile";
+import { createPortal } from "react-dom";
+import SearchBlog from "../blogs/SearchBlog";
 export default function Header() {
   const { auth } = useAuth();
-
-  console.log("auth", auth);
-
+  const { state } = useProfile();
+  const [showSearchModal, setShowSearchModal] = useState(false);
   return (
     <header>
+      {showSearchModal &&
+        createPortal(
+          <SearchBlog onClose={() => setShowSearchModal(false)}></SearchBlog>,
+          document.body
+        )}
       <nav className="container">
         <div>
           <img className="w-32" src={lws} alt="lws" />
@@ -25,15 +32,17 @@ export default function Header() {
                 Write
               </Link>
             </li>
-            <li>
-              <a
-                href="./search.html"
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <img src={searchIcon} alt="Search" />
-                <span>Search</span>
-              </a>
-            </li>
+            {auth.user && (
+              <li>
+                <button
+                  onClick={() => setShowSearchModal(true)}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <img src={searchIcon} alt="Search" />
+                  <span>Search</span>
+                </button>
+              </li>
+            )}
             {!auth.user && (
               <li>
                 <Link
@@ -49,7 +58,7 @@ export default function Header() {
             {auth?.user && (
               <li class="flex items-center">
                 <div class="avater-img bg-orange-600 text-white">
-                  {auth?.user?.avatar ? (
+                  {auth?.state?.user?.avatar ? (
                     <span>
                       {" "}
                       <img

@@ -5,3 +5,4 @@ export const ProfileContext = createContext();
 export const BlogContext = createContext();
 export const FavBlogsContext = createContext();
 export const PopularBlogsContext = createContext();
+export const DetailContext = createContext();

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { usePopularBlogs } from "../hooks/usePopularBlogs";
+import { DetailContext } from "../context";
 
-export default function PopularBlogs({ showAuthor, showDetails }) {
-  const { popularBlogs, setPopularBlogs } = usePopularBlogs();
-  console.log("Popular", popularBlogs);
+export default function PopularBlogs() {
+  const { popularBlogs } = usePopularBlogs();
+  const { showAuthor, showDetails } = useContext(DetailContext);
   return (
     <div className="sidebar-card">
       <h3 className="text-slate-300 text-xl lg:text-2xl font-semibold">

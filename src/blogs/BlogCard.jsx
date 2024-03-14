@@ -2,6 +2,7 @@ import React from "react";
 import useAuth from "../hooks/useAuth";
 import BlogActions from "./BlogActions";
 import { useAxios } from "../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
 export default function BlogCard({
   blog,
   showDetails,
@@ -11,6 +12,7 @@ export default function BlogCard({
   const { auth } = useAuth();
 
   const { api } = useAxios();
+  const navigate = useNavigate();
   const handleDeleteBlog = async (id) => {
     try {
       const response = await api.delete(
@@ -25,6 +27,11 @@ export default function BlogCard({
       alert(err.message);
     } finally {
     }
+  };
+
+  const handleEdit = (blog) => {
+    console.log("Blog to be edited ", blog);
+    navigate("/createBlog", { state: blog });
   };
 
   return (
@@ -85,6 +92,7 @@ export default function BlogCard({
           <BlogActions
             blog={blog}
             handleDeleteBlog={handleDeleteBlog}
+            handleEdit={handleEdit}
           ></BlogActions>
         )}
       </div>

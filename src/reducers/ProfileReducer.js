@@ -20,6 +20,7 @@ export function ProfileReducer(state, action) {
         ...state,
         user: action.data,
         blogs: action.data.blogs,
+        loading: false,
       };
     }
 
@@ -27,6 +28,7 @@ export function ProfileReducer(state, action) {
       return {
         ...state,
         error: action.message,
+        loading: false,
       };
     }
 
@@ -34,9 +36,20 @@ export function ProfileReducer(state, action) {
       return {
         ...state,
         user: {
-          ...action.user,
-          avatar: action.data.avatar,
+          ...state.user,
+          avatar: action.avatar,
         },
+      };
+    }
+    case actions.profile.USER_BIO_UPDATE: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          bio: action?.user?.bio,
+        },
+
+        loading: false,
       };
     }
   }

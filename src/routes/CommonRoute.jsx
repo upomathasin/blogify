@@ -8,24 +8,32 @@ import FavBlogsContextProvider from "../providers/FavBlogsContextProvider";
 import PopularBlogsProvider from "../providers/PopularBlogsProvider";
 import AuthProvider from "../providers/AuthProvider";
 import useAuth from "../hooks/useAuth";
+import DetailsProvider from "../providers/DetailsProvider";
+import SearchContextProvider from "../providers/SearchContextProvider";
 
 export default function CommonRoute() {
   const { auth } = useAuth();
   return (
     <div>
       {" "}
-      <BlogContextProvider>
+      <SearchContextProvider>
         {" "}
-        <PopularBlogsProvider>
-          <ProfileContextProvider>
-            <Header></Header>
+        <BlogContextProvider>
+          {" "}
+          <DetailsProvider>
+            {" "}
+            <PopularBlogsProvider>
+              <ProfileContextProvider>
+                <Header></Header>
 
-            <FavBlogsContextProvider>
-              <Outlet></Outlet>
-            </FavBlogsContextProvider>
-          </ProfileContextProvider>
-        </PopularBlogsProvider>
-      </BlogContextProvider>
+                <FavBlogsContextProvider>
+                  <Outlet></Outlet>
+                </FavBlogsContextProvider>
+              </ProfileContextProvider>
+            </PopularBlogsProvider>
+          </DetailsProvider>
+        </BlogContextProvider>
+      </SearchContextProvider>
       <Footer></Footer>
     </div>
   );

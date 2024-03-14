@@ -73,6 +73,27 @@ export default function BlogDetails() {
     }
   };
 
+  const handleCommentDelete = async (blogId, commentId) => {
+    if (auth?.user) {
+      try {
+        const response = await api.delete(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/blogs/${blogId}/comment/${commentId}`
+        );
+
+        if (response.status == 200) {
+          alert("Your comment has been deleted !");
+          fetchBlogsDetails();
+        }
+      } catch (err) {
+        alert("Error occurred ", err.message);
+      }
+    } else {
+      alert("Please Login First !");
+      navigate("/login");
+    }
+  };
   const handleComment = async (id, comment) => {
     if (auth?.user) {
       try {
@@ -100,7 +121,11 @@ export default function BlogDetails() {
           <BlogContent blog={blog}></BlogContent>
         </section>
 
-        <BlogComments blog={blog} handleComment={handleComment}></BlogComments>
+        <BlogComments
+          blog={blog}
+          handleComment={handleComment}
+          handleCommentDelete={handleCommentDelete}
+        ></BlogComments>
       </main>
 
       <FloatingBlogActions

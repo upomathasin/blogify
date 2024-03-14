@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import BlogCard from "./BlogCard";
 import useAllBlogs from "../hooks/useAllBlogs";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
-export default function AllBlogs({ showAuthor, showDetails }) {
+import { DetailContext } from "../context";
+
+export default function AllBlogs() {
   const { blogs, setBlogs } = useAllBlogs();
   const loadRef = useRef(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const navigate = useNavigate();
+  const { showAuthor, showDetails } = useContext(DetailContext);
 
   useEffect(() => {
     const fetchBlog = async () => {

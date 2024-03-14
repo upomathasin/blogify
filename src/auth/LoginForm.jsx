@@ -2,7 +2,7 @@ import React from "react";
 import { set, useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const {
@@ -92,11 +92,12 @@ export default function LoginForm() {
           Login
         </button>
       </div>
+
       <p className="text-center">
         Don't have an account?{" "}
-        <a href="./register.html" className="text-indigo-600 hover:underline">
+        <Link to="/register" className="text-indigo-600 hover:underline">
           Register
-        </a>
+        </Link>
       </p>
     </form>
   );

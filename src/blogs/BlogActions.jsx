@@ -4,11 +4,12 @@ import deleteIcon from "../assets/icons/delete.svg";
 import editIcon from "../assets/icons/edit.svg";
 import axios from "axios";
 import { useAxios } from "../hooks/useAxios";
-export default function BlogActions({ blog, handleDeleteBlog }) {
+import { useNavigate } from "react-router-dom";
+export default function BlogActions({ blog, handleDeleteBlog, handleEdit }) {
   const [showOption, setShowOption] = useState(false);
-  const { api } = useAxios();
 
-  const handleShowOption = () => {
+  const handleShowOption = (e) => {
+    e.stopPropagation();
     setShowOption(!showOption);
   };
 
@@ -20,12 +21,21 @@ export default function BlogActions({ blog, handleDeleteBlog }) {
 
       {showOption && (
         <div className="action-modal-container">
-          <button className="action-menu-item hover:text-lwsGreen">
+          <button
+            className="action-menu-item hover:text-lwsGreen"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(blog);
+            }}
+          >
             <img src={editIcon} alt="Edit" />
             Edit
           </button>
           <button
-            onClick={() => handleDeleteBlog(blog?.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteBlog(blog?.id);
+            }}
             className="action-menu-item hover:text-red-500"
           >
             <img src={deleteIcon} alt="Delete" />
